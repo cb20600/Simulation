@@ -1,0 +1,16 @@
+# Blender MTL File: 'Folding_Table_7kcg.blend'
+# Material Count: 1
+
+newmtl Folding_Table_7kcg
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump E:\\003_Library\\01_3D\\soloconART\\Folding_Table_7kcg\\###Creater_Data\\4k\\Folding_Table_7kcg_normal.png
+map_Kd E:\\003_Library\\01_3D\\soloconART\\Folding_Table_7kcg\\###Creater_Data\\4k\\Folding_Table_7kcg_color.png
+map_Ns E:\\003_Library\\01_3D\\soloconART\\Folding_Table_7kcg\\###Creater_Data\\4k\\Folding_Table_7kcg_roughness.png
+refl E:\\003_Library\\01_3D\\soloconART\\Folding_Table_7kcg\\###Creater_Data\\4k\\Folding_Table_7kcg_metallic.png
