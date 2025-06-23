@@ -200,7 +200,7 @@ def create_scene(enable_gui=True):
     ))
 
     strawberry = scene.add_entity(gs.morphs.Mesh(
-        file="models/components/fruits/strawberry/strawberry1.glb",
+        file="models/components/fruits/strawberry/strawberry.glb",
         pos = (strawberry_x, strawberry_y, strawberry_z),
         euler=(0, 0, 60),
         scale=0.07,
