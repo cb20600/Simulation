@@ -49,7 +49,6 @@ if __name__ == "__main__":
     # 3. 定义初始和目标关节角
     pos_init   = np.array([0, 0, 0, 1, 0, 0.5, 0])
 
-
     print("等待物理系统稳定...")
     
     for _ in range(100):
@@ -69,11 +68,11 @@ if __name__ == "__main__":
     end_pos = end_effector.get_pos().cpu().numpy()
     print("末端执行器位置：",end_pos)
 
-    obj_pos = np.array([0.14, 0.1, 0.38])
+    obj_pos = np.array([0.08, 0.07, 0.38])
     offset = np.array([0.053, -0.000, 0.15])
-    quat = np.array([0, 0.5, 1, 0])
+    quat = np.array([0, 0, 1, 0])
 
-    pos1=obj_pos + offset + np.array([0.0, 0.0, 0.15])
+    pos1=obj_pos + offset + np.array([0.0, 0.0, 0.18])
 
     qpos = xarm7.inverse_kinematics(
         link=end_effector,
@@ -93,10 +92,11 @@ if __name__ == "__main__":
         scene.step()
     print("预抓取位置")
 
+    reach_pos = pos1 + np.array([0.0, 0.0, -0.15])
     # reach
     qpos = xarm7.inverse_kinematics(
         link=end_effector,
-        pos=obj_pos + offset + np.array([0.0, 0.0, 0.03]),
+        pos=reach_pos,
         # pos = obj_pos + offset,
         quat=quat
     )
@@ -112,24 +112,75 @@ if __name__ == "__main__":
     # grasp
     qpos[7:] = 0.4
     xarm7.control_dofs_position(qpos)
-    xarm7.control_dofs_force(np.array([-1, -1]), fingers_dof)
+    xarm7.control_dofs_force(np.array([-1.5, -1.5]), fingers_dof)
     scene.step()
     for i in range(100):
         scene.step()
     print("grasp")
 
+    pos_lift= reach_pos + np.array([0.0, 0.0, 0.15])
     # lift
     qpos = xarm7.inverse_kinematics(
         link=end_effector,
-        pos=pos1,
+        pos=pos_lift,
         quat=quat
     )
     xarm7.control_dofs_position(qpos[:7], motors_dof)
     for i in range(100):
         scene.step()
+        
     print("lift")
 
+    # move
+    move_pos = pos_lift + np.array([0.1, -0.1, 0])
+    qpos = xarm7.inverse_kinematics(
+        link=end_effector,
+        pos=move_pos,
+        quat=quat
+    )
 
+    # path = xarm7.plan_path(qpos_goal=qpos, num_waypoints=100)
+    # for waypoint in path:
+    #     xarm7.control_dofs_position(waypoint[:7], motors_dof)
+    #     scene.step()
+    # for i in range(100):
+    #     scene.step()
+    # print("move")
+    # print(end_effector.get_pos())
+
+
+    end_pos = move_pos + np.array([0, 0, -0.15])
+    print(end_pos)
+    end_pos = reach_pos + np.array([0.1, -0.1, 0.0])
+    print(end_pos)
+    end_pos=[0.1, 0.35, 0.6]
+    print(end_pos)
+    qpos = xarm7.inverse_kinematics(
+        link=end_effector,
+        pos=end_pos,
+        quat=quat
+    )
+    
+
+    path = xarm7.plan_path(qpos_goal=qpos, num_waypoints=100)
+    for waypoint in path:
+        xarm7.control_dofs_position(waypoint[:7], motors_dof)
+        scene.step()
+    for i in range(100):
+        scene.step()
+    print("place")
+    print(end_effector.get_pos())
+
+
+
+    # open
+    qpos[7:] = 0
+    xarm7.control_dofs_position(qpos)
+    xarm7.control_dofs_force(np.array([-5, -5]), fingers_dof)
+    scene.step()
+    for i in range(100):
+        scene.step()
+    print("close")
 
     '''
     # base_pos = xarm7.get_link("xarm_gripper_base_link").get_pos()

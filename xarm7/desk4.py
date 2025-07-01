@@ -208,28 +208,29 @@ def create_scene(enable_gui=True):
         visualization=True,
         collision=True,
     ))
-    '''
-    # tomato = scene.add_entity(gs.morphs.Mesh(
-    #     file="models/components/fruits/tomato/Tomato.obj",
-    #     pos = (tomato_x, tomato_y, tomato_z),
-    #     euler=(90, 0, 60),
-    #     scale=0.025,
-    #     fixed=True,
-    #     visualization=True,
-    #     collision=True,
-    # ))    
 
-    # yellowBin =  scene.add_entity(
-    #     gs.morphs.Mesh(
-    #         file="models/components/trashbin/Trashbin.glb",
-    #         pos=(0.55, 0.1, 0.05),
-    #         euler=(90, 0, 0),
-    #         scale=0.02,
-    #         visualization=True,
-    #         fixed=True,
-    #         collision=False,
-    #         convexify=False
-    #     ))
+    tomato = scene.add_entity(gs.morphs.Mesh(
+        file="models/components/fruits/tomato/Tomato.obj",
+        pos = (tomato_x, tomato_y, tomato_z),
+        euler=(90, 0, 60),
+        scale=0.025,
+        fixed=True,
+        visualization=True,
+        collision=True,
+    ))    
+
+    yellowBin =  scene.add_entity(
+        gs.morphs.Mesh(
+            file="models/components/trashbin/Trashbin.glb",
+            # pos=(0.55, 0.1, 0.05),
+            pos=(0.1, 0.35, 0.05),
+            euler=(90, 0, 0),
+            scale=0.02,
+            visualization=True,
+            fixed=True,
+            collision=False,
+            convexify=False
+        ))
 
     # redBin =  scene.add_entity(
     #     gs.morphs.Mesh(
@@ -270,7 +271,7 @@ def create_scene(enable_gui=True):
     #     double_sided=False, 
     #     beam_angle=180.0
     #     )
-    '''
+
     scene.build()
 
     T = np.array([
@@ -279,25 +280,25 @@ def create_scene(enable_gui=True):
         [0,  0, -1,  0.1],
         [0,  0,  0,  1]
     ])
-    '''
+
     # T = np.array([
     #     [ 0, -1,  0, -0.08],  # X': -Y
     #     [ 1,  0,  0,  0   ],  # Y':  X
     #     [ 0,  0, -1,  0.05],  # ✅ Z': -Z ✅ 向下看 ✅ 光照正常
     #     [ 0,  0,  0,  1   ]
     # ])
-    '''
+
     camera.attach(rigid_link=gripper_link, offset_T=T)
 
     fruit_entities = {
-        "banana": banana,
-        "carrot": carrot,
-        "corn": corn,
-        "lemon": lemon,
+        # "banana": banana,
+        # "carrot": carrot,
+        # "corn": corn,
+        # "lemon": lemon,
         # "lime": lime,
-        "potato": potato,
-        "redpepper":redpepper,
-        "strawberry":strawberry,
+        # "potato": potato,
+        # "redpepper":redpepper,
+        # "strawberry":strawberry,
 
     }
     # for i, (name, fruit) in enumerate(fruit_entities.items()):
@@ -316,7 +317,7 @@ def create_scene(enable_gui=True):
 
     bins = {
         # "redBin": redBin,
-        # "yellowBin": yellowBin,
+        "yellowBin": yellowBin,
     }
 
     return scene, xarm7, fruit_entities, bins, camera
@@ -396,8 +397,6 @@ if __name__ == "__main__":
     gripper_offset = grasp_point - base_pos
 
     print("⚙️ gripper_offset     = [{:.3f}, {:.3f}, {:.3f}]".format(*gripper_offset))
-
-
 
     # 设置目标位置和方向（竖直向下）
     target_pos = np.array([0.20, 0.0, 1])
