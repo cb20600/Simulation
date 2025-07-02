@@ -400,7 +400,7 @@ if __name__ == "__main__":
 
     # 设置目标位置和方向（竖直向下）
     target_pos = np.array([0.20, 0.0, 1])
-    target_quat = np.array([0, -0.7071, 0.7071, 0])  # Z轴朝下，姿态可微调
+    target_quat = np.array([0, 0, 1, 0])  # Z轴朝下，姿态可微调
 
     # 使用逆运动学求解目标姿态的关节位置
     qpos = xarm7.inverse_kinematics(
