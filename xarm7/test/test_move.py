@@ -6,8 +6,8 @@ os.environ['PYOPENGL_PLATFORM'] = 'glx'
 
 import genesis as gs
 import numpy as np
-from desk4 import create_scene 
-from gripper_utils import init_gripper_controller, close_gripper, open_gripper,move_gripper_to
+from utils.desk4 import create_scene 
+from xarm7.utils.gripper_utils import init_gripper_controller, close_gripper, open_gripper,move_gripper_to
 
 
 if __name__ == "__main__":

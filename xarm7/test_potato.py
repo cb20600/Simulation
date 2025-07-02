@@ -4,8 +4,8 @@ os.environ['PYOPENGL_PLATFORM'] = 'glx'
 import json
 import numpy as np
 import genesis as gs
-from desk4 import create_scene
-from gripper_utils import init_gripper_controller, open_gripper, close_gripper
+from utils.desk4 import create_scene
+from utils.gripper_utils import init_gripper_controller, open_gripper, close_gripper
 
 def report_contacts(robot):
     contacts = robot.get_contacts()

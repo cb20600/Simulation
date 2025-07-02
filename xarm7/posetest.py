@@ -3,7 +3,7 @@
 import os
 import numpy as np
 import genesis as gs
-from desk4 import create_scene
+from utils.desk4 import create_scene
 import cv2
 
 os.environ['PYOPENGL_PLATFORM'] = 'glx'

@@ -5,20 +5,39 @@ import cv2
 from scipy.spatial.transform import Rotation as R
 import numpy as np
 
-def grasp_angle_to_quaternion(angle_deg):
-    """
-    将绕 Z 轴旋转的角度（度）转换为四元数，假设抓取方向竖直向下。
-    
-    参数:
-        angle_deg (float): 夹爪在 XY 平面内的旋转角度，单位：度（与主轴垂直）
+from scipy.spatial.transform import Rotation as R
+import numpy as np
 
-    返回:
-        quat (np.ndarray): 长度为 4 的四元数 (x, y, z, w)
+def compute_gripper_open_close(w_obj_m, gripper_min=0.0, gripper_max=0.85, safety_margin=0.005, max_obj_width=0.08):
     """
-    # 只绕 Z 轴旋转
-    r = R.from_euler('z', angle_deg, degrees=True)
-    quat = r.as_quat()  # 返回 [x, y, z, w]
-    return quat
+    Compute gripper open and close values based on object width.
+
+    Parameters:
+        w_obj_m (float): Object width in meters.
+        gripper_min (float): Gripper fully open position (usually 0.0).
+        gripper_max (float): Gripper fully closed position (e.g., 0.85).
+        safety_margin (float): Added/subtracted safety margin in meters.
+        max_obj_width (float): Max object width gripper can handle.
+
+    Returns:
+        open_value (float): Gripper value to open before grasping.
+        close_value (float): Gripper value to close for grasping.
+    """
+    # Clamp width
+    w = np.clip(w_obj_m, 0.01, max_obj_width)
+
+    # Total range = max - min
+    gripper_range = gripper_max - gripper_min
+
+    # Mapping: 0.0 width => 0.0 (fully open), max_obj_width => 0.85 (fully closed)
+    ratio = w / max_obj_width
+    base_value = gripper_min + ratio * gripper_range
+    # Open: slightly wider
+    open_value = np.clip(base_value + safety_margin * gripper_range / max_obj_width, gripper_min, gripper_max)
+    # Close: slightly tighter
+    close_value = np.clip(base_value - safety_margin * gripper_range / max_obj_width, gripper_min, gripper_max)
+
+    return open_value, close_value
 
 def infer_grasp_angle_and_width(mask, draw_on=None, object_index=0, pixel_to_meter=None):
     """
@@ -74,7 +93,6 @@ def infer_grasp_angle_and_width(mask, draw_on=None, object_index=0, pixel_to_met
 
     return grasp_angle, width, output_img
 
-
 def extract_grasp_infos(image_rgb, masks, pixel_to_meter=None,
                                   output_path="imgs/grasp_infos.png"):
     """
@@ -120,4 +138,17 @@ def extract_grasp_infos(image_rgb, masks, pixel_to_meter=None,
     draw_img_bgr = cv2.cvtColor(draw_img, cv2.COLOR_RGB2BGR)
     cv2.imwrite(output_path, draw_img_bgr)
 
-    return grasp_infos, output_path
+    return grasp_infos, output_path\
+    
+def simple_quaternion_from_angle(angle_deg):
+
+    # 将角度映射到 sin 曲线，角度范围 [-180, 180] → y 分量 [-1, 1]
+    y = np.sin(np.radians(angle_deg))  # 角度转弧度
+
+    # 构造非标准四元数结构（x, y, z, w）
+    quat = np.array([0.0, y, 1.0, 0.0])
+
+    # 归一化为单位四元数
+    quat = quat / np.linalg.norm(quat)
+
+    return np.round(quat, 4)  # 保留4位小数

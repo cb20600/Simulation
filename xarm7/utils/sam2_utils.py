@@ -3,8 +3,8 @@ from ultralytics import SAM
 import numpy as np
 import cv2
 import os
-from rotate import extract_grasp_infos
-from rotate import grasp_angle_to_quaternion
+from .rotate import extract_grasp_infos
+from .rotate import grasp_angle_to_quaternion
 
 def segment_with_sam2(image_rgb, boxes, sam_model_path, input_image_path):
     """
@@ -70,7 +70,7 @@ if __name__ == "__main__":
 
     image_path = "test.png"
     sam_model_path = "checkpoints/sam2_b.pt"
-    yolo_model_path = "checkpoints/best.pt"
+    yolo_model_path = "checkpoints/best_yolo.pt"
 
     # 使用你原来的 YOLO 检测函数
     image_rgb, boxes, yolo_centers, class_ids, yolo_output_path = detect_fruits(image_path, yolo_model_path)

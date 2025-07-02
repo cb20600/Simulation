@@ -3,8 +3,8 @@ os.environ['PYOPENGL_PLATFORM'] = 'glx'
 
 import numpy as np
 import genesis as gs
-from desk4 import create_scene
-from gripper_utils import init_gripper_controller, open_gripper, close_gripper
+from utils.desk4 import create_scene
+from utils.gripper_utils import init_gripper_controller, open_gripper, close_gripper
 
 # name of the JSON file you generated from sim_fruit_from_camera
 JSON_PATH = "imgs/sim_fruit_from_camera.json"
