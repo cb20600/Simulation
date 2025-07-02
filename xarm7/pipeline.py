@@ -1,4 +1,4 @@
-from utils.pose_capture import simulate_and_capture_scene
+# from utils.pose_capture import simulate_and_capture_scene
 from utils.yolo_utils import detect_fruits
 from utils.sam2_utils import segment_with_sam2
 from utils.coordinate import annotate_and_get_3d_coords
