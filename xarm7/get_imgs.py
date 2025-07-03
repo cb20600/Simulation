@@ -2,7 +2,7 @@ import os
 import numpy as np
 import cv2
 from scipy.spatial.transform import Rotation as R
-from desk4 import create_scene  # 你需要把 create_scene 函数所在的文件名换成实际文件名
+from utils.desk4 import create_scene  # 你需要把 create_scene 函数所在的文件名换成实际文件名
 
 SAVE_DIR = "imgs"
 os.makedirs(SAVE_DIR, exist_ok=True)

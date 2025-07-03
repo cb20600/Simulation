@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 utils/__pycache__/
 *.pyc
+mycobot/__pycache__/
+*.pyc
 checkpoint/
 *.pt
 imgs/
