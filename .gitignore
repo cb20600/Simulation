@@ -4,11 +4,9 @@ __pycache__/
 utils/__pycache__/
 *.pyc
 mycobot/__pycache__/
+mycobot/test/__pycache__/
+*/__pycache__/
 *.pyc
 checkpoint/
 *.pt
 imgs/
-*.png
-*.npz
-*.json
-
