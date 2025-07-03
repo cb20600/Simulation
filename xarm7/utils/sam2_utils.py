@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 import os
 from .rotate import extract_grasp_infos
-from .rotate import grasp_angle_to_quaternion
+from .rotate import simple_quaternion_from_angle
 
 def segment_with_sam2(image_rgb, boxes, sam_model_path, input_image_path):
     """
@@ -92,7 +92,7 @@ if __name__ == "__main__":
         print(info)
     for info in grasp_infos:
         angle = info["angle_deg"]
-        quat = grasp_angle_to_quaternion(angle)
+        quat = simple_quaternion_from_angle(angle)
         print(f"物体 #{info['index']} 四元数姿态: [{quat[0]:.2f}, {quat[1]:.2f}, {quat[2]:.2f}, {quat[3]:.2f}]")
 
 

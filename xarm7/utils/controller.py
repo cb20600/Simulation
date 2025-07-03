@@ -8,7 +8,7 @@ import torch
 os.environ['PYOPENGL_PLATFORM'] = 'glx'
 
 import genesis as gs
-from desk4 import create_scene 
+from desk4 import create_scene
 from gripper_utils import init_gripper_controller, close_gripper, open_gripper, move_gripper_to
 
 # ========== Step 1: 初始化 OpenAI ==========
@@ -22,6 +22,14 @@ def chat_with_gpt(messages):
         temperature=0.4
     )
     return response.choices[0].message
+
+def clean_json_output(text):
+    import re
+    text = text.strip()
+    if text.startswith("```json") or text.startswith("```"):
+        text = re.sub(r"```(?:json)?", "", text)
+        text = text.strip("`\n")
+    return text
 
 # ========== Step 2: 执行模块函数 ==========
 def perform_pick_and_place(scene, xarm7, end_effector, obj_pos, target_pos, quat):
@@ -79,21 +87,30 @@ def execute_subtasks(subtasks, scene, xarm7, fruits, bins, end_effector):
     for subtask in subtasks:
         obj_name = subtask.get("object_name")
         target_name = subtask.get("target_bin")
+        ref_object = subtask.get("ref_object")
+        direction = subtask.get("direction")
         action = subtask.get("action")
 
-        if obj_name not in fruits or target_name not in bins:
-            print(f"❌ 无效的对象名或目标: {obj_name}, {target_name}")
+        if obj_name not in fruits:
+            print(f"❌ 无效的对象名: {obj_name}")
             continue
 
-        obj = fruits[obj_name]
-        target = bins[target_name]
+        if action == "move" and ref_object and direction:
+            if ref_object not in fruits:
+                print(f"❌ 无效的参考对象: {ref_object}")
+                continue
+            # 简单处理方向为 right side，向 x 轴正方向偏移
+            offset = np.array([0.12, 0, 0]) if "right" in direction else np.array([-0.12, 0, 0])
+            target_pos = fruits[ref_object].get_pos().cpu().numpy() + offset
+        elif action == "move" and target_name in bins:
+            target_pos = bins[target_name].get_pos().cpu().numpy()
+        else:
+            print(f"❌ 无法解析目标位置: {target_name or direction}")
+            continue
 
-        obj_pos = obj.get_pos().cpu().numpy()
-        target_pos = target.get_pos().cpu().numpy()
-
-        if action == "move":
-            print(f"🚚 移动 {obj_name} 到 {target_name}")
-            perform_pick_and_place(scene, xarm7, end_effector, obj_pos, target_pos, quat)
+        obj_pos = fruits[obj_name].get_pos().cpu().numpy()
+        print(f"🚚 移动 {obj_name} 到 {direction or target_name}")
+        perform_pick_and_place(scene, xarm7, end_effector, obj_pos, target_pos, quat)
 
 # ========== Step 4: 主函数入口 ==========
 if __name__ == "__main__":
@@ -128,7 +145,8 @@ if __name__ == "__main__":
 
         stage1_result = chat_with_gpt(stage1_messages)
         try:
-            triplets = json.loads(stage1_result.content)
+            triplets_raw = clean_json_output(stage1_result.content)
+            triplets = json.loads(triplets_raw)
         except Exception as e:
             print("⚠️ 无法解析 triplets:", e)
             print("原始输出:", stage1_result.content)
@@ -139,11 +157,15 @@ if __name__ == "__main__":
             "content": (
                 "You are a robot task planner.\n"
                 "Given a list of structured object-action-target triplets, generate a list of subtasks.\n"
+                "If the 'target' refers to a relative direction (e.g., 'right side of banana'), extract the direction and reference object separately.\n"
                 "Each subtask should include:\n"
                 "- task_id: index starting from 1\n"
                 "- description: natural language description\n"
                 "- action: same as input (move, align, etc.)\n"
-                "- object_name, target_bin, ref_object, direction, etc.\n"
+                "- object_name: name of the object to move\n"
+                "- target_bin: if the target is a bin, use its name\n"
+                "- ref_object: if the target is relative (like 'right side of banana'), extract 'banana'\n"
+                "- direction: for relative placement (like 'right side')\n"
                 "Output a JSON array of subtasks ready for planning."
             )
         }, {
@@ -153,7 +175,8 @@ if __name__ == "__main__":
 
         stage2_result = chat_with_gpt(stage2_messages)
         try:
-            subtasks = json.loads(stage2_result.content)
+            subtasks_raw = clean_json_output(stage2_result.content)
+            subtasks = json.loads(subtasks_raw)
             print(json.dumps(subtasks, indent=2, ensure_ascii=False))
         except Exception as e:
             print("⚠️ 无法解析 subtasks:", e)

@@ -36,11 +36,9 @@ def detect_fruits(input_path, yolo_path):
     #     centers.append((int((x1 + x2) / 2), int((y1 + y2) / 2)))
     #     class_ids.append(cls)
 
-
-
     yolo_model = YOLO(yolo_path)
     print("✅ YOLO 模型实际输入尺寸 imgsz =", yolo_model.model.args["imgsz"])
-    results = yolo_model(input_path)  # ✅ 推荐：直接用路径
+    results = yolo_model(input_path)
     image_bgr = cv2.imread(input_path)
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
 
@@ -74,8 +72,8 @@ def detect_fruits(input_path, yolo_path):
     yolo_output_path = input_path.replace(".png", "_boxed.png")
     cv2.imwrite(yolo_output_path, image_bgr)
     print("✅ YOLO 检测完成，共识别到", len(boxes), "个物体")
-    print("centers: ", centers)
-    print(f"✅ 检测结果图已保存：{yolo_output_path}")
+    # print("centers: ", centers)
+    # print(f"✅ 检测结果图已保存：{yolo_output_path}")
 
     return image_rgb, boxes, centers, class_ids, yolo_output_path
 

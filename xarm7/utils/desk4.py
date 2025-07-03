@@ -209,15 +209,15 @@ def create_scene(enable_gui=True):
         collision=True,
     ))
 
-    tomato = scene.add_entity(gs.morphs.Mesh(
-        file="models/components/fruits/tomato/Tomato.obj",
-        pos = (tomato_x, tomato_y, tomato_z),
-        euler=(90, 0, 60),
-        scale=0.025,
-        fixed=True,
-        visualization=True,
-        collision=True,
-    ))    
+    # tomato = scene.add_entity(gs.morphs.Mesh(
+    #     file="models/components/fruits/tomato/Tomato.obj",
+    #     pos = (tomato_x, tomato_y, tomato_z),
+    #     euler=(90, 0, 60),
+    #     scale=0.025,
+    #     fixed=True,
+    #     visualization=True,
+    #     collision=True,
+    # ))    
 
     yellowBin =  scene.add_entity(
         gs.morphs.Mesh(

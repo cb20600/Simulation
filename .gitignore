@@ -1,8 +1,12 @@
 .env
 __pycache__/
 *.pyc
+utils/__pycache__/
+*.pyc
 checkpoint/
 *.pt
 imgs/
 *.png
 *.npz
+*.json
+

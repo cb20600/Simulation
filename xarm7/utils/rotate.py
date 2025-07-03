@@ -93,8 +93,7 @@ def infer_grasp_angle_and_width(mask, draw_on=None, object_index=0, pixel_to_met
 
     return grasp_angle, width, output_img
 
-def extract_grasp_infos(image_rgb, masks, pixel_to_meter=None,
-                                  output_path="imgs/grasp_infos.png"):
+def extract_grasp_infos(image_rgb, masks, pixel_to_meter=None, output_path="imgs/grasp_infos.png"):
     """
     提取每个 SAM2 mask 的抓取信息（中心点、主轴角度、副轴宽度），不依赖类别信息。
 
