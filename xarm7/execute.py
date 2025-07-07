@@ -1,4 +1,5 @@
 import json
+import torch
 import numpy as np
 from numpy.linalg import norm
 
@@ -80,3 +81,34 @@ def execute_trajectory(xarm7, gripper, trajectory_json_path, scene=None, wait_st
 
         except Exception as e:
             print(f"❌ 第 {step.get('step_index', '?')} 步执行失败: {e}")
+
+def move_to_pose_with_gripper(xarm7, scene, target_pos, target_quat, gripper_value, num_waypoints=150):
+    """
+    控制机械臂移动到指定位置并设置夹爪开合。
+
+    参数:
+        xarm7: 机械臂对象
+        scene: 仿真场景
+        target_pos: 目标位置 (x, y, z)
+        target_quat: 目标朝向 (x, y, z, w)
+        gripper_value: 夹爪开合值（0~1），默认为 0.25
+        num_waypoints: 路径点数量
+    """
+    end_effector = xarm7.get_link("xarm_gripper_base_link")   
+    all_dof = np.arange(13)
+
+    qpos = xarm7.inverse_kinematics(
+        link=end_effector, 
+        pos=target_pos, 
+        quat=target_quat
+        )
+    qpos[7:] = torch.tensor([gripper_value] * 6, device=qpos.device, dtype=qpos.dtype)
+
+    path = xarm7.plan_path(qpos_goal=qpos, num_waypoints=num_waypoints)
+    for waypoint in path:
+        xarm7.control_dofs_position(waypoint, all_dof)
+        scene.step()
+    for _ in range(50):
+        scene.step()
+
+    print("机械臂已移动到目标位姿")

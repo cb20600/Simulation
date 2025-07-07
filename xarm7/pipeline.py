@@ -6,10 +6,11 @@ from utils.save_json import save_json_from_detection
 from utils.rotate import extract_grasp_infos, simple_quaternion_from_angle
 from utils.desk4 import create_scene
 from utils.gripper_utils import GripperController
+from utils.pose_capture import capture
 
 from GPT import parser
-from pose_capture import capture
-from execute_trajectory import execute_trajectory
+from xarm7.utils.pose_capture import capture
+from xarm7.execute import execute_trajectory
 
 import os
 import numpy as np
@@ -124,7 +125,7 @@ if __name__ == "__main__":
         np.savez(npz_path, pointcloud=pointcloud, mask=mask)
         print(f"✅ 点云和掩码已保存到: {npz_path}")
     # return {"img_path": img_path, "npz_path": npz_path}
-
+    
 
     # ======================= Step 2: YOLO Detection =======================
     image_rgb, boxes, yolo_centers, class_ids, yolo_output_path = detect_fruits(img_path, yolo_model_path)

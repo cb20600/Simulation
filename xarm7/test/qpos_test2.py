@@ -7,7 +7,7 @@ os.environ['PYOPENGL_PLATFORM'] = 'glx'
 import genesis as gs
 import numpy as np
 from utils.desk4 import create_scene 
-from xarm7.utils.gripper_utils import init_gripper_controller, close_gripper, open_gripper,move_gripper_to
+from utils.gripper_utils import init_gripper_controller, close_gripper, open_gripper,move_gripper_to
 
 # 初始化场景
 scene, xarm7, fruits, bins, camera = create_scene(enable_gui=True)

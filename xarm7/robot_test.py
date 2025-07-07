@@ -8,8 +8,8 @@ from utils.desk4 import create_scene
 from utils.gripper_utils import GripperController
 
 from GPT import parser
-from pose_capture import capture
-from execute_trajectory import execute_trajectory
+from xarm7.utils.pose_capture import capture
+from xarm7.execute import execute_trajectory
 from GPT import trajectory_plan
 
 import os
