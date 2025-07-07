@@ -10,6 +10,7 @@ from utils.gripper_utils import GripperController
 from GPT import parser
 from pose_capture import capture
 from execute_trajectory import execute_trajectory
+from GPT import trajectory_plan
 
 import os
 import numpy as np
@@ -202,104 +203,19 @@ if __name__ == "__main__":
     # ======================= Step 6.5: 保存子任务文本 =======================
     with open("llm_subtasks.txt", "w") as f:
         f.write(task_description)
+
     # ======================= Step 7: LLM Trajectory Planning =======================
-    from GPT import trajectory_plan
+
     trajectory_result = trajectory_plan(
-        subtask_txt_path = "llm_subtasks.txt",
-        grasp_json_path = json_path
+        subtask_txt_path="llm_subtasks.txt",
+        grasp_json_path=json_path
     )
     # 初始化控制器
     gripper = GripperController(xarm7, scene)
-
     execute_trajectory(
         xarm7=xarm7,
         gripper=gripper,
         trajectory_json_path="trajectory_plan.json",
-        scene=scene,
+        scene=scene,  # 如果你有 Genesis 场景
         wait_steps=40
     )
-
-'''
-    # # ======================= Step 3: YOLO Detection =======================
-
-    # # 使用你原来的 YOLO 检测函数
-    # image_rgb, boxes, yolo_centers, class_ids, yolo_output_path = detect_fruits(img_path, yolo_model_path)
-    # if len(boxes) == 0:
-    #     print("❌ No objects detected by YOLO. Exit!")
-    #     exit()
-
-    # print("yolo中心点：", yolo_centers)
-
-    # # ======================= Step 4: SAM2 Segmentation ====================
-    # masks, sam_centers, result_path = segment_with_sam2(image_rgb, boxes, sam2_model_path, img_path)
-    # print("SAM2中心点：", sam_centers)
-
-    # grasp_infos, yolo_img_path = extract_grasp_infos(
-    # image_rgb=image_rgb,
-    # masks=masks,
-    # pixel_to_meter=0.0025,  # 可选：像素转换为米的比例
-    # output_path="grasp_infos_visual.png"
-    # )
-
-    # # 输出结果
-    # print("✅ 抓取信息如下：")
-    # for info in grasp_infos:
-    #     print(info)
-    # for info in grasp_infos:
-    #     angle = info["angle_deg"]
-    #     quat = grasp_angle_to_quaternion(angle)
-    #     print(f"物体 #{info['index']} 四元数姿态: [{quat[0]:.2f}, {quat[1]:.2f}, {quat[2]:.2f}, {quat[3]:.2f}]")
-
-
-    # print("✅ SAM2 可视化图已保存至：", output_img_path)
-
-    # masks, sam_centers, sam2_result = segment_with_sam2(
-    #     image_rgb=image_rgb,
-    #     boxes=boxes,
-    #     sam_model_path=sam2_model_path,
-    #     input_image_path=img_path
-    # )
-
-    # # Optional: extract grasp angles and quaternions
-    # grasp_infos, grasp_img_path = extract_grasp_infos(
-    #     image_rgb=image_rgb,
-    #     masks=masks,
-    #     pixel_to_meter=0.0025,
-    #     output_path=img_path.replace(".png", "_grasp_infos.png")
-    # )
-
-    # quaternions = []
-    # for info in grasp_infos:
-    #     angle_deg = info["angle_deg"]
-    #     quat = grasp_angle_to_quaternion(angle_deg)
-    #     quaternions.append(quat)
-    #     print(f"🔁 Object #{info['index']} grasp angle = {angle_deg:.2f}°, quaternion = {quat}")
-
-    # # ======================= Step 5: 3D Coordinate Projection =============
-    # coords_3d = annotate_and_get_3d_coords(
-    #     image_path=img_path,
-    #     npz_path=npz_path,
-    #     pixel_points=sam_centers  # Prefer sam_centers for precision
-    # )
-
-    # # Print coordinates
-    # for i, coord in enumerate(coords_3d):
-    #     if coord is not None:
-    #         print(f"🧭 Object #{i} 3D position: [{coord[0]:.3f}, {coord[1]:.3f}, {coord[2]:.3f}]")
-    #     else:
-    #         print(f"⚠️ Object #{i} has no valid 3D coordinate")
-
-    # from utils.save_json import save_json_from_detection
-
-    # save_json_from_detection(
-    #     yolo_path=yolo_model_path,
-    #     class_ids=class_ids,
-    #     centers=sam_centers,
-    #     coords_3d=coords_3d,
-    #     widths=[info["width_m"] for info in grasp_infos],
-    #     quaternions=quaternions,
-    #     # gripper_opens=[compute_gripper_open_close(info["width_m"])[0] for info in grasp_infos],
-    #     # gripper_closes=[compute_gripper_open_close(info["width_m"])[1] for info in grasp_infos],
-    #     # output_path=json_path
-    # )
-'''

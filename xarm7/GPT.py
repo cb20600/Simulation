@@ -65,15 +65,15 @@ def trajectory_plan(subtask_txt_path="llm_subtasks.txt", grasp_json_path="grasp_
             "content": (
                 "You are a robot trajectory planner. Based on the user's task breakdown and the sensed object information, "
                 "generate a detailed motion plan for the robot arm to follow.\n"
-                "Each action should include:\n"
-                "- A step index\n"
-                "- Target 3D position (x, y, z)\n"
-                "- Target orientation (quaternion: x, y, z, w)\n"
-                "- Gripper action: open or close or maintain grip\n"
-                "- Gripper value (in percent if open/close)\n"
-                "- Description of what this step does\n\n"
-                "Output should be clearly numbered natural language steps (for human reading),"
-                "but ensure each numeric field (position, quaternion, gripper) is in strict format to allow extraction."
+                "Each step must include the following fields in plain text format:\n\n"
+                "Step N:\n"
+                "- Target 3D position: (x, y, z)\n"
+                "- Target orientation: (x, y, z, w)\n"
+                "- Gripper action: open / close / maintain grip\n"
+                "- Gripper value: float% (e.g., 100.0%)\n"
+                "- Description: What this step does\n\n"
+                "Use this exact format, without Markdown symbols like ** or #, and keep each field on its own line.\n"
+                "Make sure to use consistent punctuation and spacing so the output can be parsed with regular expressions."
             )
         },
         {
@@ -99,28 +99,31 @@ def trajectory_plan(subtask_txt_path="llm_subtasks.txt", grasp_json_path="grasp_
     # 提取结构化字段为 JSON（用正则解析）
     steps = []
     pattern = re.compile(
-        r"[-–]\s*Target 3D position:\s*\(([^)]+)\)\s*"
-        r"[-–]\s*Target orientation:\s*\(([^)]+)\)\s*"
-        r"[-–]\s*Gripper action:\s*(.*?)\s*\(?(\d*\.?\d+)?%?\)?\s*"
-        r"[-–]\s*Description:\s*(.+)",
-        re.IGNORECASE
+        r"- Target 3D position:\s*\(([^)]+)\)\s*"
+        r"- Target orientation:\s*\(([^)]+)\)\s*"
+        r"- Gripper action:\s*(.*?)\s*"
+        r"- Gripper value:\s*(\d*\.?\d+)%\s*",
+        re.IGNORECASE | re.DOTALL
     )
 
     matches = pattern.findall(llm_output)
+    print(f"✅ Found {len(matches)} steps.")
 
     for i, match in enumerate(matches):
-        pos_str, quat_str, action, value, desc = match
+        pos_str, quat_str, action, value = match
         pos = [float(x.strip()) for x in pos_str.split(",")]
         quat = [float(x.strip()) for x in quat_str.split(",")]
         value = float(value) / 100 if value else 0.0
         steps.append({
-            "step_index": i + 1,
             "position": pos,
             "quaternion": quat,
             "gripper_action": action.lower(),
-            "gripper_value": value,
-            "description": desc.strip()
+            "gripper_value": value
         })
+    print("========== REGEX DEBUG ==========")
+    for m in matches:
+        print(m)
+    print("=================================")
 
     # 保存 JSON 文件
     with open(save_json_path, "w") as f:
@@ -128,3 +131,9 @@ def trajectory_plan(subtask_txt_path="llm_subtasks.txt", grasp_json_path="grasp_
     print(f"\n✅ Trajectory steps saved to: {save_json_path}")
 
     return llm_output, steps
+
+def trajectory_plan_on_real():
+    return
+
+if __name__ == "__main__":
+    trajectory_plan(subtask_txt_path="llm_subtasks.txt", grasp_json_path="imgs/sim_fruit_from_camera.json", save_json_path="trajectory_plan.json")

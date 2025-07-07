@@ -8,3 +8,6 @@ mycobot/test/__pycache__/
 checkpoint/
 *.pt
 imgs/
+*.txt
+*.png
+*.json

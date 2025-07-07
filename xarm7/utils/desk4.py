@@ -104,8 +104,8 @@ def create_scene(enable_gui=True):
     potato_z = fruit_z - 0.03
     # potato_z = fruit_z + 0.07
 
-    redpepper_x = fruit_x - 0.05
-    redpepper_y = fruit_y - 0.05
+    redpepper_x = fruit_x - 0.04
+    redpepper_y = fruit_y - 0.04
     redpepper_z = fruit_z - 0.02
 
     strawberry_x = fruit_x
@@ -132,7 +132,7 @@ def create_scene(enable_gui=True):
         gs.morphs.Mesh(
         file="models/components/fruits/carrot/carrot.glb",
         pos=(carrot_x, carrot_y, carrot_z),
-        euler=(0, 90, 40),
+        euler=(0, 90, 130),
         scale=0.006,
         fixed=fruit_fixed,
         visualization=True,

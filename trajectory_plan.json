@@ -1,1 +1,107 @@
-[]
+[
+  {
+    "position": [
+      0.279,
+      0.044,
+      0.392
+    ],
+    "quaternion": [
+      0.0,
+      0.0023,
+      1.0,
+      0.0
+    ],
+    "gripper_action": "maintain grip",
+    "gripper_value": 0.0
+  },
+  {
+    "position": [
+      0.141,
+      0.07,
+      0.416
+    ],
+    "quaternion": [
+      0.0,
+      0.4345,
+      0.9007,
+      0.0
+    ],
+    "gripper_action": "maintain grip",
+    "gripper_value": 0.0
+  },
+  {
+    "position": [
+      0.217,
+      -0.088,
+      0.388
+    ],
+    "quaternion": [
+      0.0,
+      0.5602,
+      0.8284,
+      0.0
+    ],
+    "gripper_action": "open",
+    "gripper_value": 1.0
+  },
+  {
+    "position": [
+      0.177,
+      0.006,
+      0.399
+    ],
+    "quaternion": [
+      0.0,
+      0.5795,
+      0.815,
+      0.0
+    ],
+    "gripper_action": "close",
+    "gripper_value": 0.4
+  },
+  {
+    "position": [
+      0.241,
+      0.07,
+      0.416
+    ],
+    "quaternion": [
+      0.0,
+      0.4345,
+      0.9007,
+      0.0
+    ],
+    "gripper_action": "maintain grip",
+    "gripper_value": 0.4
+  },
+  {
+    "position": [
+      0.241,
+      0.07,
+      0.416
+    ],
+    "quaternion": [
+      0.0,
+      0.4345,
+      0.9007,
+      0.0
+    ],
+    "gripper_action": "open",
+    "gripper_value": 1.0
+  },
+  {
+    "position": [
+      0.141,
+      0.07,
+      0.416
+    ],
+    "quaternion": [
+      0.0,
+      0.4345,
+      0.9007,
+      0.0
+    ],
+    "gripper_action": "maintain grip",
+    "gripper_value": 0.0
+  }
+]
