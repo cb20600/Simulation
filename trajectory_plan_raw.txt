@@ -1,0 +1,50 @@
+### Motion Plan for Robot Arm
+
+#### Step 1: Identify the Potato
+- **Target 3D Position:** (x: 0.139, y: 0.071, z: 0.415)
+- **Target Orientation (Quaternion):** (x: 0.0, y: 0.6177, z: 0.7864, w: 0.0)
+- **Gripper Action:** Maintain grip
+- **Gripper Value:** 0%
+- **Description:** Move the camera or sensors to focus on the potato to ensure it is clearly visible and accessible.
+
+#### Step 2: Identify the Banana
+- **Target 3D Position:** (x: 0.275, y: 0.043, z: 0.39)
+- **Target Orientation (Quaternion):** (x: 0.0, y: 0.0818, z: 0.9966, w: 0.0)
+- **Gripper Action:** Maintain grip
+- **Gripper Value:** 0%
+- **Description:** Adjust the camera or sensors to focus on the banana, ensuring it is clearly visible and accessible.
+
+#### Step 3: Assess the Space to the Right of the Banana
+- **Target 3D Position:** (x: 0.325, y: 0.043, z: 0.39)
+- **Target Orientation (Quaternion):** (x: 0.0, y: 0.0818, z: 0.9966, w: 0.0)
+- **Gripper Action:** Maintain grip
+- **Gripper Value:** 0%
+- **Description:** Move sensors to the right of the banana to assess the space and ensure it is clear for placing the potato.
+
+#### Step 4: Pick Up the Potato
+- **Target 3D Position:** (x: 0.139, y: 0.071, z: 0.415)
+- **Target Orientation (Quaternion):** (x: 0.0, y: 0.6177, z: 0.7864, w: 0.0)
+- **Gripper Action:** Close
+- **Gripper Value:** 80%
+- **Description:** Move the robot arm to the potato's position and gently close the gripper to securely grasp the potato.
+
+#### Step 5: Move the Potato
+- **Target 3D Position:** (x: 0.325, y: 0.043, z: 0.39)
+- **Target Orientation (Quaternion):** (x: 0.0, y: 0.6177, z: 0.7864, w: 0.0)
+- **Gripper Action:** Maintain grip
+- **Gripper Value:** 80%
+- **Description:** Carefully transport the potato towards the designated area to the right of the banana, maintaining a steady grip.
+
+#### Step 6: Place the Potato
+- **Target 3D Position:** (x: 0.325, y: 0.043, z: 0.39)
+- **Target Orientation (Quaternion):** (x: 0.0, y: 0.6177, z: 0.7864, w: 0.0)
+- **Gripper Action:** Open
+- **Gripper Value:** 0%
+- **Description:** Position the potato directly to the right of the banana and gently open the gripper to release the potato.
+
+#### Step 7: Verify Placement
+- **Target 3D Position:** (x: 0.325, y: 0.043, z: 0.39)
+- **Target Orientation (Quaternion):** (x: 0.0, y: 0.0818, z: 0.9966, w: 0.0)
+- **Gripper Action:** Maintain grip
+- **Gripper Value:** 0%
+- **Description:** Use sensors to verify that the potato is placed correctly to the right of the banana and that both objects are stable. Adjust if necessary.
